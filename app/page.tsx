@@ -6,7 +6,7 @@ import { FC } from 'react';
 import AcmeLogo from './ui/acme-logo';
 import { lusitana } from './ui/fonts';
 
-const Page: FC = () => {
+const HomePage: FC = () => {
   return (
     <main className="flex min-h-screen flex-col p-6">
       <div className="flex h-20 shrink-0 items-end rounded-lg bg-blue-500 p-4 md:h-52">
@@ -53,4 +53,4 @@ const Page: FC = () => {
   );
 };
 
-export default Page;
+export default HomePage;
