@@ -4,6 +4,8 @@ import { PowerIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { FC } from 'react';
 
+export const experimental_ppr = true;
+
 const SideNav: FC = () => {
   return (
     <div className="flex h-full flex-col px-3 py-4 md:px-2">
