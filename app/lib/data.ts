@@ -86,24 +86,24 @@ export async function fetchFilteredInvoices(query: string, currentPage: number) 
   const offset = (currentPage - 1) * ITEMS_PER_PAGE;
 
   try {
-    const invoices = await sql<InvoicesTable[]>`
+    const invoices: InvoicesTable[] = await prisma.$queryRaw`
       SELECT
-        invoices.id,
-        invoices.amount,
-        invoices.date,
-        invoices.status,
-        customers.name,
-        customers.email,
-        customers.image_url
-      FROM invoices
-      JOIN customers ON invoices.customer_id = customers.id
+        "public"."Invoice".id,
+        "public"."Invoice".amount,
+        "public"."Invoice".date,
+        "public"."Invoice".status,
+        "public"."Customer".name,
+        "public"."Customer".email,
+        "public"."Customer".image_url
+      FROM "public"."Invoice"
+      JOIN "public"."Customer" ON "public"."Invoice".customer_id = "public"."Customer".id
       WHERE
-        customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`} OR
-        invoices.amount::text ILIKE ${`%${query}%`} OR
-        invoices.date::text ILIKE ${`%${query}%`} OR
-        invoices.status ILIKE ${`%${query}%`}
-      ORDER BY invoices.date DESC
+        "public"."Customer".name ILIKE ${`%${query}%`} OR
+        "public"."Customer".email ILIKE ${`%${query}%`} OR
+        "public"."Invoice".amount::text ILIKE ${`%${query}%`} OR
+        "public"."Invoice".date::text ILIKE ${`%${query}%`} OR
+        "public"."Invoice".status ILIKE ${`%${query}%`}
+      ORDER BY "public"."Invoice".date DESC
       LIMIT ${ITEMS_PER_PAGE} OFFSET ${offset}
     `;
 
@@ -116,16 +116,16 @@ export async function fetchFilteredInvoices(query: string, currentPage: number) 
 
 export async function fetchInvoicesPages(query: string) {
   try {
-    const data = await sql`SELECT COUNT(*)
-    FROM invoices
-    JOIN customers ON invoices.customer_id = customers.id
+    const data: { count: string }[] = await prisma.$queryRaw`SELECT COUNT(*)
+    FROM "public"."Invoice"
+    JOIN "public"."Customer" ON "public"."Invoice".customer_id = "public"."Customer".id
     WHERE
-      customers.name ILIKE ${`%${query}%`} OR
-      customers.email ILIKE ${`%${query}%`} OR
-      invoices.amount::text ILIKE ${`%${query}%`} OR
-      invoices.date::text ILIKE ${`%${query}%`} OR
-      invoices.status ILIKE ${`%${query}%`}
-  `;
+      "public"."Customer".name ILIKE ${`%${query}%`} OR
+      "public"."Customer".email ILIKE ${`%${query}%`} OR
+      "public"."Invoice".amount::text ILIKE ${`%${query}%`} OR
+      "public"."Invoice".date::text ILIKE ${`%${query}%`} OR
+      "public"."Invoice".status ILIKE ${`%${query}%`}
+    `;
 
     const totalPages = Math.ceil(Number(data[0].count) / ITEMS_PER_PAGE);
     return totalPages;
