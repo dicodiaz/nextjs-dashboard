@@ -1,4 +1,4 @@
-import { Revenue } from '@/app/lib/definitions';
+import { fetchRevenue } from '@/app/lib/data';
 import { generateYAxis } from '@/app/lib/utils';
 import { lusitana } from '@/app/ui/fonts';
 import { CalendarIcon } from '@heroicons/react/24/outline';
@@ -10,17 +10,15 @@ import { FC } from 'react';
 // https://www.chartjs.org/
 // https://airbnb.io/visx/
 
-type RevenueChartProps = {
-  revenue: Revenue[];
-};
-
-const RevenueChart: FC<RevenueChartProps> = async ({ revenue }) => {
-  const chartHeight = 350;
-  const { yAxisLabels, topLabel } = generateYAxis(revenue);
+const RevenueChart: FC = async () => {
+  const revenue = await fetchRevenue();
 
   if (!revenue || revenue.length === 0) {
     return <p className="mt-4 text-gray-400">No data available.</p>;
   }
+
+  const chartHeight = 350;
+  const { yAxisLabels, topLabel } = generateYAxis(revenue);
 
   return (
     <div className="w-full md:col-span-4">
