@@ -1,3 +1,4 @@
+import { deleteInvoice } from '@/app/lib/actions';
 import { PencilIcon, PlusIcon, TrashIcon } from '@heroicons/react/24/outline';
 import Link from 'next/link';
 import { FC } from 'react';
@@ -19,19 +20,24 @@ type RUDInvoiceProps = {
 
 export const UpdateInvoice: FC<RUDInvoiceProps> = ({ id }) => {
   return (
-    <Link href="/dashboard/invoices" className="rounded-md border p-2 hover:bg-gray-100">
+    <Link
+      href={`/dashboard/invoices/${id}/edit`}
+      className="rounded-md border p-2 hover:bg-gray-100"
+    >
       <PencilIcon className="w-5" />
     </Link>
   );
 };
 
 export const DeleteInvoice: FC<RUDInvoiceProps> = ({ id }) => {
+  const deleteInvoiceWithId = deleteInvoice.bind(null, id);
+
   return (
-    <>
+    <form action={deleteInvoiceWithId}>
       <button type="submit" className="rounded-md border p-2 hover:bg-gray-100">
         <span className="sr-only">Delete</span>
         <TrashIcon className="w-5" />
       </button>
-    </>
+    </form>
   );
 };

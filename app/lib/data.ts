@@ -1,5 +1,5 @@
 import postgres from 'postgres';
-import { CustomerField, CustomersTableType, InvoiceForm, InvoicesTable } from './definitions';
+import { CustomersTableType, InvoicesTable } from './definitions';
 import prisma from './prisma';
 import { formatCurrency } from './utils';
 
@@ -137,15 +137,10 @@ export async function fetchInvoicesPages(query: string) {
 
 export async function fetchInvoiceById(id: string) {
   try {
-    const data = await sql<InvoiceForm[]>`
-      SELECT
-        invoices.id,
-        invoices.customer_id,
-        invoices.amount,
-        invoices.status
-      FROM invoices
-      WHERE invoices.id = ${id};
-    `;
+    const data = await prisma.invoice.findMany({
+      select: { id: true, customer_id: true, amount: true, status: true },
+      where: { id },
+    });
 
     const invoice = data.map((invoice) => ({
       ...invoice,
@@ -162,13 +157,10 @@ export async function fetchInvoiceById(id: string) {
 
 export async function fetchCustomers() {
   try {
-    const customers = await sql<CustomerField[]>`
-      SELECT
-        id,
-        name
-      FROM customers
-      ORDER BY name ASC
-    `;
+    const customers = await prisma.customer.findMany({
+      select: { id: true, name: true },
+      orderBy: { name: 'asc' },
+    });
 
     return customers;
   } catch (err) {
