@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcrypt';
 import { customers, invoices, revenues, users } from '../app/lib/placeholder-data';
 
 const prisma = new PrismaClient();
@@ -10,7 +11,8 @@ const main = async () => {
   await prisma.user.deleteMany({});
 
   for (const { name, email, password } of users) {
-    await prisma.user.create({ data: { email, name, password } });
+    const hashedPassword = await bcrypt.hash(password, 10);
+    await prisma.user.create({ data: { email, name, password: hashedPassword } });
   }
 
   for (const { name, email, image_url } of customers) {

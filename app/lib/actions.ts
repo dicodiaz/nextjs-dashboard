@@ -1,5 +1,7 @@
 'use server';
 
+import { signIn } from '@/auth';
+import { AuthError } from 'next-auth';
 import { revalidatePath } from 'next/cache';
 import { redirect } from 'next/navigation';
 import { z } from 'zod';
@@ -109,4 +111,20 @@ export const deleteInvoice = async (id: string) => {
   await prisma.invoice.delete({ where: { id } });
 
   revalidatePath('/dashboard/invoices');
+};
+
+export const authenticate = async (prevState: string | undefined, formData: FormData) => {
+  try {
+    await signIn('credentials', formData);
+  } catch (error) {
+    if (error instanceof AuthError) {
+      switch (error.type) {
+        case 'CredentialsSignin':
+          return 'Invalid credentials.';
+        default:
+          return 'Something went wrong.';
+      }
+    }
+    throw error;
+  }
 };
