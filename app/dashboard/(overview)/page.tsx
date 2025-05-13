@@ -3,7 +3,12 @@ import CardWrapper from '@/app/ui/dashboard/cards';
 import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import { CardsSkeleton, LatestInvoicesSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
+import { Metadata } from 'next';
 import { FC, Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Dashboard',
+};
 
 const DashboardPage: FC = () => {
   return (

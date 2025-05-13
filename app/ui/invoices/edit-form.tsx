@@ -22,8 +22,6 @@ const EditInvoiceForm: FC<EditInvoiceFormProps> = ({ invoice, customers }) => {
   const updateInvoiceWithId = updateInvoice.bind(null, invoice.id);
   const [state, formAction] = useActionState(updateInvoiceWithId, initialState);
 
-  console.log(state);
-
   return (
     <form action={formAction}>
       <div className="rounded-md bg-gray-50 p-4 md:p-6">

@@ -1,6 +1,11 @@
 import AcmeLogo from '@/app/ui/acme-logo';
 import LoginForm from '@/app/ui/login-form';
+import { Metadata } from 'next';
 import { FC, Suspense } from 'react';
+
+export const metadata: Metadata = {
+  title: 'Login',
+};
 
 const LoginPage: FC = () => {
   return (
