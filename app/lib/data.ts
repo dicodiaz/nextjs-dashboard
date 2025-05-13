@@ -57,17 +57,13 @@ export async function fetchCardData() {
     const paidInvoiceCountPromise = prisma.invoice.count({ where: { status: 'paid' } });
     const pendingInvoiceCountPromise = prisma.invoice.count({ where: { status: 'pending' } });
 
-    const data = await Promise.all([
-      invoiceCountPromise,
-      customerCountPromise,
-      paidInvoiceCountPromise,
-      pendingInvoiceCountPromise,
-    ]);
-
-    const numberOfInvoices = data[0];
-    const numberOfCustomers = data[1];
-    const totalPaidInvoices = data[2];
-    const totalPendingInvoices = data[3];
+    const [numberOfInvoices, numberOfCustomers, totalPaidInvoices, totalPendingInvoices] =
+      await Promise.all([
+        invoiceCountPromise,
+        customerCountPromise,
+        paidInvoiceCountPromise,
+        pendingInvoiceCountPromise,
+      ]);
 
     return {
       numberOfCustomers,

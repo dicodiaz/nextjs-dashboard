@@ -1,4 +1,7 @@
 // This file contains placeholder data that you'll be replacing with real data in the Data Fetching chapter:
+
+import { Status } from '@prisma/client';
+
 // https://nextjs.org/learn/dashboard-app/fetching-data
 const users = [
   {
@@ -48,7 +51,14 @@ const customers = [
   },
 ];
 
-const invoices = [
+type PlaceholderInvoices = {
+  customer_email: string;
+  amount: number;
+  status: Status;
+  date: string;
+};
+
+const invoices: PlaceholderInvoices[] = [
   {
     customer_email: customers[0].email,
     amount: 15795,
