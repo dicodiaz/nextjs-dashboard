@@ -25,14 +25,18 @@ export const createInvoice = async (formData: FormData) => {
   const amountInCents = amount * 100;
   const date = new Date();
 
-  await prisma.invoice.create({
-    data: {
-      customer_id: customerId,
-      amount: amountInCents,
-      status,
-      date,
-    },
-  });
+  try {
+    await prisma.invoice.create({
+      data: {
+        customer_id: customerId,
+        amount: amountInCents,
+        status,
+        date,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
@@ -46,20 +50,26 @@ export const updateInvoice = async (id: string, formData: FormData) => {
   });
   const amountInCents = amount * 100;
 
-  await prisma.invoice.update({
-    where: { id },
-    data: {
-      customer_id: customerId,
-      amount: amountInCents,
-      status,
-    },
-  });
+  try {
+    await prisma.invoice.update({
+      where: { id },
+      data: {
+        customer_id: customerId,
+        amount: amountInCents,
+        status,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
 
   revalidatePath('/dashboard/invoices');
   redirect('/dashboard/invoices');
 };
 
 export const deleteInvoice = async (id: string) => {
+  // throw new Error('Failed to Delete Invoice');
+
   await prisma.invoice.delete({ where: { id } });
 
   revalidatePath('/dashboard/invoices');

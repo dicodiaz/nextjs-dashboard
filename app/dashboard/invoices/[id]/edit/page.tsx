@@ -1,6 +1,7 @@
 import { fetchCustomers, fetchInvoiceById } from '@/app/lib/data';
 import Breadcrumbs from '@/app/ui/invoices/breadcrumbs';
 import Form from '@/app/ui/invoices/edit-form';
+import { notFound } from 'next/navigation';
 import { FC } from 'react';
 
 type PageProps = {
@@ -11,6 +12,10 @@ const Page: FC<PageProps> = async (props) => {
   const params = await props.params;
   const { id } = params;
   const [invoice, customers] = await Promise.all([fetchInvoiceById(id), fetchCustomers()]);
+
+  if (!invoice) {
+    notFound();
+  }
 
   return (
     <main>
