@@ -1,5 +1,5 @@
 import postgres from 'postgres';
-import { CustomersTableType, InvoicesTable } from './definitions';
+import { CustomersTableType, FormattedCustomersTable, InvoicesTable } from './definitions';
 import prisma from './prisma';
 import { formatCurrency } from './utils';
 
@@ -170,30 +170,30 @@ export async function fetchCustomers() {
   }
 }
 
-export async function fetchFilteredCustomers(query: string) {
+export const fetchFilteredCustomers = async (query: string) => {
   try {
-    const data = await sql<CustomersTableType[]>`
-		SELECT
-		  customers.id,
-		  customers.name,
-		  customers.email,
-		  customers.image_url,
-		  COUNT(invoices.id) AS total_invoices,
-		  SUM(CASE WHEN invoices.status = 'pending' THEN invoices.amount ELSE 0 END) AS total_pending,
-		  SUM(CASE WHEN invoices.status = 'paid' THEN invoices.amount ELSE 0 END) AS total_paid
-		FROM customers
-		LEFT JOIN invoices ON customers.id = invoices.customer_id
-		WHERE
-		  customers.name ILIKE ${`%${query}%`} OR
-        customers.email ILIKE ${`%${query}%`}
-		GROUP BY customers.id, customers.name, customers.email, customers.image_url
-		ORDER BY customers.name ASC
+    const data: CustomersTableType[] = await prisma.$queryRaw`
+      SELECT
+        "public"."Customer".id,
+        "public"."Customer".name,
+        "public"."Customer".email,
+        "public"."Customer".image_url,
+        COUNT("public"."Invoice".id) AS total_invoices,
+        SUM(CASE WHEN "public"."Invoice".status = 'pending' THEN "public"."Invoice".amount ELSE 0 END) AS total_pending,
+        SUM(CASE WHEN "public"."Invoice".status = 'paid' THEN "public"."Invoice".amount ELSE 0 END) AS total_paid
+      FROM "public"."Customer"
+      LEFT JOIN "public"."Invoice" ON "public"."Customer".id = "public"."Invoice".customer_id
+      WHERE
+        "public"."Customer".name ILIKE ${`%${query}%`} OR
+        "public"."Customer".email ILIKE ${`%${query}%`}
+      GROUP BY "public"."Customer".id, "public"."Customer".name, "public"."Customer".email, "public"."Customer".image_url
+      ORDER BY "public"."Customer".name ASC
 	  `;
 
-    const customers = data.map((customer) => ({
+    const customers: FormattedCustomersTable[] = data.map((customer) => ({
       ...customer,
-      total_pending: formatCurrency(customer.total_pending),
-      total_paid: formatCurrency(customer.total_paid),
+      total_pending: formatCurrency(Number(customer.total_pending)),
+      total_paid: formatCurrency(Number(customer.total_paid)),
     }));
 
     return customers;
@@ -201,4 +201,4 @@ export async function fetchFilteredCustomers(query: string) {
     console.error('Database Error:', err);
     throw new Error('Failed to fetch customer table.');
   }
-}
+};
