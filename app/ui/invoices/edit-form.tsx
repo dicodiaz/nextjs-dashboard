@@ -9,7 +9,6 @@ import {
   CurrencyDollarIcon,
   UserCircleIcon,
 } from '@heroicons/react/24/outline';
-import { Status } from '@prisma/client';
 import Link from 'next/link';
 import { FC, useActionState } from 'react';
 
@@ -99,7 +98,7 @@ const EditInvoiceForm: FC<EditInvoiceFormProps> = ({ invoice, customers }) => {
                   name="status"
                   type="radio"
                   value="pending"
-                  defaultChecked={invoice.status === Status.pending}
+                  defaultChecked={invoice.status === 'pending'}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
@@ -115,7 +114,7 @@ const EditInvoiceForm: FC<EditInvoiceFormProps> = ({ invoice, customers }) => {
                   name="status"
                   type="radio"
                   value="paid"
-                  defaultChecked={invoice.status === Status.paid}
+                  defaultChecked={invoice.status === 'paid'}
                   className="h-4 w-4 cursor-pointer border-gray-300 bg-gray-100 text-gray-600 focus:ring-2"
                 />
                 <label
