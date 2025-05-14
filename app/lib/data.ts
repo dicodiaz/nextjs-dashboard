@@ -146,6 +146,7 @@ export async function fetchInvoiceById(id: string) {
       ...invoice,
       // Convert amount from cents to dollars
       amount: invoice.amount / 100,
+      status: invoice.status as 'paid' | 'pending',
     }));
 
     return invoice[0];
