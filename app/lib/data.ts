@@ -1,9 +1,6 @@
-import postgres from 'postgres';
 import { CustomersTableType, FormattedCustomersTable, InvoicesTable } from './definitions';
 import prisma from './prisma';
 import { formatCurrency } from './utils';
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 export async function fetchRevenue() {
   try {

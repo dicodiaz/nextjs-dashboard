@@ -1,12 +1,9 @@
 import bcrypt from 'bcrypt';
 import NextAuth from 'next-auth';
 import Credentials from 'next-auth/providers/credentials';
-import postgres from 'postgres';
 import { z } from 'zod';
 import prisma from './app/lib/prisma';
 import { authConfig } from './auth.config';
-
-const sql = postgres(process.env.POSTGRES_URL!, { ssl: 'require' });
 
 const getUser = async (email: string) => {
   try {
