@@ -4,13 +4,16 @@ import LatestInvoices from '@/app/ui/dashboard/latest-invoices';
 import RevenueChart from '@/app/ui/dashboard/revenue-chart';
 import { CardsSkeleton, LatestInvoicesSkeleton, RevenueChartSkeleton } from '@/app/ui/skeletons';
 import { Metadata } from 'next';
+import { cookies } from 'next/headers';
 import { FC, Suspense } from 'react';
 
 export const metadata: Metadata = {
   title: 'Dashboard',
 };
 
-const DashboardPage: FC = () => {
+const DashboardPage: FC = async () => {
+  await cookies();
+
   return (
     <main>
       <h1 className={`${lusitana.className} mb-4 text-xl md:text-2xl`}>Dashboard</h1>
